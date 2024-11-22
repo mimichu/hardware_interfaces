@@ -43,6 +43,8 @@
 //////////
 //Includes
 
+
+#include "platform.h"
 //Platform specific
 #ifdef __unix__ /*For Unix*/
 #define _BSD_SOURCE

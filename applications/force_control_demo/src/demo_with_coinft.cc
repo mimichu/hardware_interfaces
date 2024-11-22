@@ -7,6 +7,80 @@
 #include <ur_rtde/ur_rtde.h>
 #include <yaml-cpp/yaml.h>
 
+// Added for plotting
+#include <ftxui/screen/screen.hpp>
+#include <deque>
+#include <thread>
+
+class ForcePlotter {
+private:
+    static const size_t WINDOW_SIZE = 50;
+    static const size_t PLOT_HEIGHT = 10;
+    std::deque<std::array<double, 6>> data;
+    std::array<double, 6> min_vals{}, max_vals{};
+    ftxui::Screen screen;
+    
+    void updateMinMax(const std::array<double, 6>& values) {
+        for (size_t i = 0; i < 6; i++) {
+            min_vals[i] = std::min(min_vals[i], values[i]);
+            max_vals[i] = std::max(max_vals[i], values[i]);
+        }
+    }
+
+public:
+    ForcePlotter() : screen(ftxui::Screen::Create(
+        /*width=*/120,
+        /*height=*/40
+    )) {
+        for (auto& val : min_vals) val = std::numeric_limits<double>::max();
+        for (auto& val : max_vals) val = std::numeric_limits<double>::lowest();
+    }
+
+    void update(const std::vector<double>& ftData) {
+        std::array<double, 6> current_data;
+        std::copy_n(ftData.begin(), 6, current_data.begin());
+        
+        data.push_back(current_data);
+        updateMinMax(current_data);
+        
+        if (data.size() > WINDOW_SIZE) {
+            data.pop_front();
+        }
+
+        // Create graphs
+        using namespace ftxui;
+        std::vector<Element> graphs;
+        const std::array<std::string, 6> labels = {"Fx", "Fy", "Fz", "Tx", "Ty", "Tz"};
+        
+        for (size_t i = 0; i < 6; i++) {
+            std::vector<int> plot_data;
+            for (const auto& d : data) {
+                double normalized = (d[i] - min_vals[i]) / (max_vals[i] - min_vals[i]);
+                plot_data.push_back(static_cast<int>(normalized * PLOT_HEIGHT));
+            }
+            
+            auto graph = vbox({
+                text(labels[i]),
+                graph(std::move(plot_data)) | flex,
+                separator(),
+            });
+            graphs.push_back(graph);
+        }
+
+        auto document = hbox({
+            vbox({graphs[0], graphs[1], graphs[2]}) | flex,
+            separator(),
+            vbox({graphs[3], graphs[4], graphs[5]}) | flex,
+        });
+
+        screen = Screen::Create(screen.dimx(), screen.dimy());
+        Render(screen, document);
+        screen.Print();
+    }
+};
+
+// Added for plotting
+
 Eigen::MatrixXd deserialize_matrix(const YAML::Node& node) {
   int nr = node.size();
   int nc = node[0].size();
@@ -32,7 +106,7 @@ int main() {
 
   // open file
   const std::string CONFIG_PATH =
-      "/home/yifanhou/git/hardware_interfaces/applications/force_control_demo/"
+      "/Users/chuerpan/Documents/repo/umiFT/submodules/hardware_interfaces/applications/force_control_demo/"
       "config/force_control_demo.yaml";
   YAML::Node config{};
   // CoinFT configs
@@ -101,6 +175,8 @@ int main() {
 
   timer.tic();
 
+  ForcePlotter plotter;
+
   while (true) {
     RUT::TimePoint t_start = robot.rtde_init_period();
     // Update robot status
@@ -111,6 +187,7 @@ int main() {
     std::vector<double> ftData = sensor.getLatestData();
 
     if (!ftData.empty()) {
+      plotter.update(ftData);
       std::cout << "[" << timer.toc_ms() << " ms] "
                 << "Force/Torque Data: ";
       for (const auto& value : ftData) {

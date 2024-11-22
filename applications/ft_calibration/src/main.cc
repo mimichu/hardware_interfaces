@@ -1,3 +1,8 @@
+// At the top of main.cc
+#ifndef MACOS
+#include <robotiq_ft_modbus/robotiq_ft_modbus.h>
+#endif
+
 #include <unistd.h>
 #include <memory>
 

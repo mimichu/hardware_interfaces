@@ -31,8 +31,7 @@ int main() {
 
   // open file
   const std::string CONFIG_PATH =
-      "/path/to/hardware_interfaces/applications/force_control_demo/"
-      "config/force_control_demo.yaml";
+      "/Users/chuerpan/Documents/repo/umiFT/submodules/hardware_interfaces/applications/force_control_demo/config/force_control_demo.yaml";
   YAML::Node config{};
   try {
     config = YAML::LoadFile(CONFIG_PATH);
@@ -81,7 +80,7 @@ int main() {
   //       0, 1, 0, 0, 0, 0,
   //       0, 0, 1, 0, 0, 0;
   // // clang-format on
-  int n_af = 6;
+  int n_af = 3;
   controller.setForceControlledAxis(Tr, n_af);
 
   pose_ref = pose;

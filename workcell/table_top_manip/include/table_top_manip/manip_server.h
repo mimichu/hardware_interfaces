@@ -1,5 +1,6 @@
 #pragma once
 
+// Standard library includes
 #include <unistd.h>
 #include <csignal>
 #include <deque>
@@ -8,25 +9,36 @@
 #include <mutex>
 #include <thread>
 
+// Third-party includes
 #include <yaml-cpp/yaml.h>
-#include <opencv2/opencv.hpp>
 #include <unsupported/Eigen/CXX11/Tensor>
 
+// Robot utilities
 #include <RobotUtilities/spatial_utilities.h>
 #include <RobotUtilities/timer_linux.h>
+#include <RobotUtilities/data_buffer.h>
 
+// Hardware interfaces
+#include <hardware_interfaces/robot_interfaces.h>
+#include <hardware_interfaces/camera_interfaces.h>
+#include <hardware_interfaces/ft_interfaces.h>
+#include <hardware_interfaces/types.h>
+
+// Force control
 #include <force_control/admittance_controller.h>
 #include <force_control/config_deserialize.h>
-#include <hardware_interfaces/robot_interfaces.h>
-#include <hardware_interfaces/types.h>
-// hardware used in this app
+
+// Common hardware interfaces
 #include <ati_netft/ati_netft.h>
+#include <ur_rtde/ur_rtde.h>
+
+// Platform-specific includes
+#ifndef MACOS
+#include <opencv2/opencv.hpp>
 #include <gopro/gopro.h>
 #include <realsense/realsense.h>
 #include <robotiq_ft_modbus/robotiq_ft_modbus.h>
-#include <ur_rtde/ur_rtde.h>
-
-#include <RobotUtilities/data_buffer.h>
+#endif
 
 struct ManipServerConfig {
   std::string data_folder{""};
