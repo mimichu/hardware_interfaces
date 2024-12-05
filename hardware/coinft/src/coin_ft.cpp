@@ -58,6 +58,7 @@ CoinFT::CoinFT(const std::string& port, unsigned int baud_rate,
       tareSampleTarget(100) {
   serial.set_option(boost::asio::serial_port_base::baud_rate(baud_rate));
   std::cout << "Connected to Comport" << std::endl;
+  std::cout << "calibration_file!!!! " << calibration_file << std::endl;
   initializeSensor();
 
   // Load the calibration matrix
@@ -88,19 +89,24 @@ CoinFT::~CoinFT() {
 }
 
 void CoinFT::initializeSensor() {
+  std::cout << "Initializing sensor..." << std::endl;
   // Send IDLE command
   sendChar(IDLE);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
+  std::cout << "IDLE command sent." << std::endl;
   // Send QUERY command to get packet size
   sendChar(QUERY);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::cout << "QUERY command sent." << std::endl;
 
   // Read packet size
   std::vector<uint8_t> data = readData(1);
+  std::cout << "Data received." << std::endl;
   if (!data.empty()) {
     packet_size = static_cast<int>(data[0]) - 1;
+    std::cout << "Packet size: " << packet_size << std::endl;
   } else {
+    std::cout << "Failed to read packet size." << std::endl;
     throw std::runtime_error("Failed to read packet size.");
   }
 
