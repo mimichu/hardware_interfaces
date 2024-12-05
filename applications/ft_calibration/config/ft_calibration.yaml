@@ -1,7 +1,7 @@
 use_ati: true
 
 ur_rtde:
-  robot_ip: "192.168.2.106"
+  robot_ip: "192.168.2.102"
   rtde_frequency: 500.0
   rt_receive_priority: 90
   rt_control_priority: 85
@@ -35,7 +35,7 @@ robotiq_ft_modbus:
 
 
 ati_netft:
-    ip_address: "192.168.2.102"
+    ip_address: "192.168.2.106"
     # counts per force and torque are found from 'configuration' tab in the ati web interface.
     counts_per_force: 1000000
     counts_per_torque: 1000000
