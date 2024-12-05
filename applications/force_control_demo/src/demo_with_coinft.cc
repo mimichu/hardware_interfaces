@@ -82,18 +82,18 @@ int main() {
 
   controller.init(time0, admittance_config, pose);
 
-  RUT::Matrix6d Tr = RUT::Matrix6d::Identity();
-  // RUT::Matrix6d Tr;
-  // // clang-format off
-  // Tr <<
-  //       0, 1, 0, 0, 0, 0,
-  //       0, 0, 0, 1, 0, 0,
-  //       0, 0, 0, 0, 1, 0,
-  //       0, 0, 0, 0, 0, 1,
-  //       1, 0, 0, 0, 0, 0,
-  //       0, 0, 1, 0, 0, 0;
+  // RUT::Matrix6d Tr = RUT::Matrix6d::Identity();
+  RUT::Matrix6d Tr;
+  // clang-format off
+  Tr <<
+        0, 0, 0, 1, 0, 0,
+        0, 0, 0, 0, 1, 0,
+        0, 0, 0, 0, 0, 1,
+        0, 0, 1, 0, 0, 0,
+        0, 1, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0;
   // // clang-format on
-  int n_af = 6;
+  int n_af = 3;
   controller.setForceControlledAxis(Tr, n_af);
 
   pose_ref = pose;
