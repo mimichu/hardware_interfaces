@@ -39,22 +39,26 @@ ur_rtde:
     safe_zone: [-0.5, 0.7, -0.9, -0.2, 0.2, 0.8]
 
 coin_ft:
-  port: "/dev/tty.usbmodem11402" # New Machine TODO: change this to the correct port locally
+  port: "/dev/tty.usbmodem11302" # New Machine TODO: change this to the correct port locally
   baud_rate: 115200
   calibration_file: "/Users/chuerpan/Documents/repo/umiFT/submodules/hardware_interfaces/hardware/coinft/config/calMat_UFT6.csv" # New Machine TODO: change this to the correct path locally
-  PoseSensorTool: [0.2, 0.005, 0.085, 0.5, -0.5, -0.5,  0.5]
+  PoseSensorTool: [0.0, 0.000, 0.00, 0.5, -0.5, -0.5,  0.5]
+  # PoseSensorTool: [0.2, 0.005, 0.085, 0.5, -0.5, -0.5,  0.5]
 
 admittance_controller:
   dt: 0.002
   log_to_file: false
   log_file_path: "/tmp/admittance_controller.log"
   compliance6d:
-    stiffness: [30, 30, 30, 2, 2, 2]
-    damping: [8.5, 8.5, 8.5, 0.1, 0.1, 0.1] # for data collection
-    # damping: [1.5, 1.5, 1.5, 0.1, 0.1, 0.1] # for data collection
-    inertia: [5, 5, 5, 0.0005, 0.0005, 0.0005]
-    # inertia: [0.1, 0.1, 0.1, 0.0005, 0.0005, 0.0005]
-  max_spring_force_magnitude: 20
+    # stiffness: [30, 30, 30, 2, 2, 2]
+    # damping: [8.5, 8.5, 8.5, 0.1, 0.1, 0.1] # for data collection
+    # # damping: [1.5, 1.5, 1.5, 0.1, 0.1, 0.1] # for data collection
+    # inertia: [5, 5, 5, 0.0005, 0.0005, 0.0005]
+    # # inertia: [0.1, 0.1, 0.1, 0.0005, 0.0005, 0.0005]
+    stiffness: [1, 1, 1, 2, 2, 2]
+    damping: [0.000001, 0.000001, 0.000001, 0.1, 0.1, 0.1] # for data collection
+    inertia: [0.0000001, 0.0000001, 0.0000001, 0.0005, 0.0005, 0.0005]
+  max_spring_force_magnitude: 20f
   direct_force_control_gains:
     P_trans: 0.5
     I_trans: 0
